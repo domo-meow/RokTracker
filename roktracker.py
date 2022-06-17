@@ -22,7 +22,7 @@ def tointcheck(element):
 #Initiliaze paths and variables
 today = date.today()
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' #Change to your installation path folder.
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\TeddyBearPro\AppData\Local\Programs\Tesseract-OCR\tesseract.exe' #Change to your installation path folder.
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -117,15 +117,16 @@ style.font = font
 #Initialize Excel Sheet Header
 sheet1.write(0, 0, 'Governor Name', style)
 sheet1.write(0, 1, 'Governor ID', style)
-sheet1.write(0, 2, 'Power', style)
-sheet1.write(0, 3, 'Kill Points', style)
-sheet1.write(0, 4, 'Deads', style)
-sheet1.write(0, 5, 'Tier 1 Kills', style)
-sheet1.write(0, 6, 'Tier 2 Kills', style)
-sheet1.write(0, 7, 'Tier 3 Kills', style)
-sheet1.write(0, 8, 'Tier 4 Kills', style)
-sheet1.write(0, 9, 'Tier 5 Kills', style)
-sheet1.write(0, 10,'Rss Assistance', style)
+sheet1.write(0, 2, 'Alliance', style)
+sheet1.write(0, 3, 'Power', style)
+sheet1.write(0, 4, 'Kill Points', style)
+sheet1.write(0, 5, 'Deads', style)
+sheet1.write(0, 6, 'Tier 1 Kills', style)
+sheet1.write(0, 7, 'Tier 2 Kills', style)
+sheet1.write(0, 8, 'Tier 3 Kills', style)
+sheet1.write(0, 9, 'Tier 4 Kills', style)
+sheet1.write(0, 10, 'Tier 5 Kills', style)
+sheet1.write(0, 11,'Rss Assistance', style)
 
 #Position for next governor to check
 Y =[285, 390, 490, 590, 605]
@@ -205,6 +206,10 @@ for i in range(j,search_range):
 	im_gov_killpoints = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 	gov_name = tk.Tk().clipboard_get()
 	
+	#Alliance Name
+	roi = (644, 364, 257, 44)
+	im_gov_alliance = image[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+	
 	#kills tier
 	device.shell(f'input tap 1118 350')
 	
@@ -212,23 +217,24 @@ for i in range(j,search_range):
 	gov_id = pytesseract.image_to_string(im_gov_id,config="-c tessedit_char_whitelist=0123456789")
 	gov_power = pytesseract.image_to_string(im_gov_power,config="-c tessedit_char_whitelist=0123456789")
 	gov_killpoints = pytesseract.image_to_string(im_gov_killpoints,config="-c tessedit_char_whitelist=0123456789")
+	gov_alliance = pytesseract.image_to_string(im_gov_alliance)
 	image = device.screencap()
 	with open(('kills_tier.png'), 'wb') as f:
 				f.write(image)
 	image2 = cv2.imread('kills_tier.png',cv2.IMREAD_GRAYSCALE)
-	roi = (867, 591, 215, 28) #tier 1
+	roi = (862, 597, 215, 28) #tier 1
 	im_kills_tier1 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 636, 215, 26) #tier 2
+	roi = (862, 642, 215, 26) #tier 2
 	im_kills_tier2 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 681, 215, 26) #tier 3
+	roi = (862, 687, 215, 26) #tier 3
 	im_kills_tier3 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 726, 215, 26) #tier 4
+	roi = (862, 732, 215, 26) #tier 4
 	im_kills_tier4 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-	roi = (867, 771, 215, 26) #tier 5
+	roi = (862, 777, 215, 26) #tier 5
 	im_kills_tier5 = image2[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
 	#More info tab
@@ -275,7 +281,7 @@ for i in range(j,search_range):
 	
 	#Just to check the progress, printing in cmd the result for each governor
 	if gov_power == '':
-		gov_power = '0\n'
+		gov_power = '0\n'	
 	if gov_killpoints =='':
 		gov_killpoints = '0\n'
 	if gov_dead == '' :
@@ -305,7 +311,7 @@ for i in range(j,search_range):
 		else:
 			gov_rss_assistance= gov_rss_assistance2
 
-	print('Governor ID: ' + gov_id + 'Governor Name: ' + gov_name + '\nGovernor Power: ' + gov_power + 'Governor Killpoints: ' + gov_killpoints + 'Tier 1 kills: ' + gov_kills_tier1 + 'Tier 2 kills: ' + gov_kills_tier2 + 'Tier 3 kills: ' + gov_kills_tier3 + 'Tier 4 kills: ' +  gov_kills_tier4 + 'Tier 5 kills: ' + gov_kills_tier5 + 'Governor Dead Troops: ' + gov_dead + 'Governor RSS Assistance: ' + gov_rss_assistance)
+	print('Governor ID: ' + gov_id + 'Governor Name: ' + gov_name + '\nAlliance: ' + gov_alliance + '\nGovernor Power: ' + gov_power + 'Governor Killpoints: ' + gov_killpoints + 'Tier 1 kills: ' + gov_kills_tier1 + 'Tier 2 kills: ' + gov_kills_tier2 + 'Tier 3 kills: ' + gov_kills_tier3 + 'Tier 4 kills: ' +  gov_kills_tier4 + 'Tier 5 kills: ' + gov_kills_tier5 + 'Governor Dead Troops: ' + gov_dead + 'Governor RSS Assistance: ' + gov_rss_assistance)
 	  
 	device.shell(f'input tap 1396 58') #close more info
 	time.sleep(0.5)
@@ -315,15 +321,16 @@ for i in range(j,search_range):
 	#Write results in excel file
 	sheet1.write(i+1-j, 0, gov_name)
 	sheet1.write(i+1-j, 1, tointcheck(gov_id))
-	sheet1.write(i+1-j, 2, tointcheck(gov_power))
-	sheet1.write(i+1-j, 3, tointcheck(gov_killpoints))
-	sheet1.write(i+1-j, 4, tointcheck(gov_dead))
-	sheet1.write(i+1-j, 5, tointcheck(gov_kills_tier1))
-	sheet1.write(i+1-j, 6, tointcheck(gov_kills_tier2))
-	sheet1.write(i+1-j, 7, tointcheck(gov_kills_tier3))
-	sheet1.write(i+1-j, 8, tointcheck(gov_kills_tier4))
-	sheet1.write(i+1-j, 9, tointcheck(gov_kills_tier5))
-	sheet1.write(i+1-j, 10, tointcheck(gov_rss_assistance))
+	sheet1.write(i+1-j, 2, gov_alliance)
+	sheet1.write(i+1-j, 3, tointcheck(gov_power))
+	sheet1.write(i+1-j, 4, tointcheck(gov_killpoints))
+	sheet1.write(i+1-j, 5, tointcheck(gov_dead))
+	sheet1.write(i+1-j, 6, tointcheck(gov_kills_tier1))
+	sheet1.write(i+1-j, 7, tointcheck(gov_kills_tier2))
+	sheet1.write(i+1-j, 8, tointcheck(gov_kills_tier3))
+	sheet1.write(i+1-j, 9, tointcheck(gov_kills_tier4))
+	sheet1.write(i+1-j, 10, tointcheck(gov_kills_tier5))
+	sheet1.write(i+1-j, 11, tointcheck(gov_rss_assistance))
 	
 #Save the excel file in the following format e.g. TOP300-2021-12-25-1253.xls or NEXT300-2021-12-25-1253.xls
 if resume_scanning :
